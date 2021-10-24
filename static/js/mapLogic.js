@@ -80,9 +80,12 @@ var queryUrl =
   //var queryUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=" +
   "2014-01-02&maxlongitude=-69.52148437&minlongitude=-123.83789062&maxlatitude=48.74894534&minlatitude=25.16517337";
 
-  function getColor(depth) {
-      if (depth > 20 ) {
+  function getColor(Crime_Type) {
+      if (Crime_Type=='THEFT' ) {
           return "red"
+      }
+      if (Crime_Type=='ROBBERY' ) {
+        return "blue"
       }
      else { 
          return "green"
@@ -96,15 +99,21 @@ d3.json(queryUrl).then(function(data) {
     {
       onEachFeature: function(feature, layer) {
         layer.bindPopup(
-          `<h2>${feature.properties.district}<br>${feature.properties.block}`
+          `<h2>District:${feature.properties.district}<br>Location:${feature.properties.block}<br>Crime_Type:${feature.properties.primary_type} <br>Year:${feature.properties.year
+          }`
         );
+        //layer.on({
+     //    mouseover: highlightFeature,
+      //    mouseout: resetHighlight,
+     //   click: zoomToFeature});
       },
       pointToLayer:function(feature,latlon){
           return L.circleMarker(latlon)
       },
       style: function(feature) {
           return {
-              fillColor:getColor(feature.geometry.coordinates[2]),
+              //fillColor:getColor(feature.geometry.coordinates[2]),
+              fillColor:getColor(feature.properties.primary_type),
               //radius:feature.properties.mag*4,
               weight:0.5,
               color:"black"
