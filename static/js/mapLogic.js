@@ -1,84 +1,8 @@
-// var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
 
-// var myMap;
-// var geoLayer
-
-// // Perform a GET request to the query URL
-// // get data
-// d3.json(queryUrl).then(function(data) {
-//   console.log(data.features);
-//   // Using the features array sent back in the API data, create a GeoJSON layer and add it to the map
-//   //geoLayer = L.geoJSON=(data.features).addTo(myMap)
-//   geoLayer = L.geoJSON(data.features);
-//   createEarthquakesMap(geoLayer);
-
-// });
-// // geometry point gives you the point marker /plygon
-// // Define streetmap and darkmap layers
-// //For each 
-// //Notes
-
-// //geoLayer.geometry.type= "point";
-// // for (var i = 0; i < geoLayer.length; i++) {
-// //var Lat = geoLayer.geometry.coordinates[1];
-// //var Lag = geoLayer.geometry.coordinates[0];
-
-// function createEarthquakesMap(geoLayerData){
-
-// var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-//   tileSize: 512,
-//   maxZoom: 18,
-//   zoomOffset: -1,
-//   id: "mapbox/streets-v11",
-//   accessToken: API_KEY
-// });
-
-// var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-//     maxZoom: 18,
-//     zoomOffset: -1,
-//     id: "mapbox/dark-v10",
-//     accessToken: API_KEY
-//   });
-
-//   // Define a baseMaps object to hold our base layers
-//   var baseMaps = {
-//     "Street Map": streetmap,
-//     "Dark Map": darkmap
-//   };
-
-// // Create a new map
-//  var myMap = L.map("map", {
-//    center: [
-//     37.09, -95.71
-//    ],
-//   zoom: 5,
-//   layers: [streetmap]
-//   });
-
-//   //geoLayer.geometry.type= "point";
-// // for (var i = 0; i < geoLayer.length; i++) {
-// //var Lat = geoLayer.geometry.coordinates[1];
-// //var Lag = geoLayer.geometry.coordinates[0];
-// //L.marker (Lat, Lang).addTo(myMap)
-// }
 
 // Store our API endpoint as queryUrl
 var queryUrl =
  "https://data.cityofchicago.org/resource/ijzp-q8t2.geojson"
-//"https://data.cityofchicago.org/resource/ijzp-q8t2.json?$limit=50000&$offset=0&$order=id&$where=year > 2017"
-  // read from the flask application
-  // read from DB
-  //flask application 
-  //using find
-
-  //var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
-
-
-
-  //var queryUrl = "http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=" +
-  "2014-01-02&maxlongitude=-69.52148437&minlongitude=-123.83789062&maxlatitude=48.74894534&minlatitude=25.16517337";
 
   function getColor(Crime_Type) {
       if (Crime_Type=='THEFT' ) {
@@ -98,14 +22,27 @@ d3.json(queryUrl).then(function(data) {
   var geoLayer = L.geoJSON(data.features,
     {
       onEachFeature: function(feature, layer) {
+        layer.on({
+          // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
+          mouseover: function(event) {
+            layer = event.target;
+            layer.setStyle({
+              fillOpacity: 0.9
+            });
+          },
+          mouseout: function(event) {
+            layer = event.target;
+            layer.setStyle({
+              fillOpacity: 0.5
+            });
+          },
+          
+        });
         layer.bindPopup(
           `<h2>District:${feature.properties.district}<br>Location:${feature.properties.block}<br>Crime_Type:${feature.properties.primary_type} <br>Year:${feature.properties.year
           }`
         );
-        //layer.on({
-     //    mouseover: highlightFeature,
-      //    mouseout: resetHighlight,
-     //   click: zoomToFeature});
+      
       },
       pointToLayer:function(feature,latlon){
           return L.circleMarker(latlon)
@@ -116,6 +53,7 @@ d3.json(queryUrl).then(function(data) {
               fillColor:getColor(feature.properties.primary_type),
               //radius:feature.properties.mag*4,
               weight:0.5,
+              fillOpacity: 0.5,
               color:"black"
           }
       }
