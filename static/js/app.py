@@ -12,15 +12,35 @@ mongo = PyMongo(app)
 
 
 
-@app.route("/")
-def index():
-    geoData= mongo.db.events.find()
-    print(geoData)
+@app.route("/read")
+def read():
+    cursor= mongo.db.events.find()
+    #print(cursor)
+    result=[]
+    for record in cursor:
+        property = record["properties"]
+        #property = record["Feature"]
+        result +=  property
+        #print(result)
+    return jsonify(result)
+
    # return render_template("index.html", geoData=geoData)
     #json1 = geoData.to_json(orient='records')
     #jsonfiles = json.loads(geoData)
-    return jsonify(geoData.id)
-
+  
+@app.route("/readFeature")
+def readGeoJson():
+    cursor= mongo.db.events.find()
+    #print(cursor)
+    features=[]
+    for geojson_feature  in cursor:
+        features.append({
+            "type": geojson_feature['type'],
+            "geometry":  geojson_feature['geometry'],
+            "properties" :  geojson_feature['properties']
+            }
+        )
+    return jsonify(features)
 
 
 ##crime = collection.find()
