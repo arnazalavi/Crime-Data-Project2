@@ -1,11 +1,11 @@
 
 
 // Store our API endpoint as queryUrl
-//getData();
+getData();
 // retrieve data from database
 async function getData() {
   //const response =  fetch('/readFeature');
- response =('http://127.0.0.1:5000/readFeature')
+ response =('http://127.0.0.1:5000/getGeojasonData')
   // data = response.json();
     
   console.log(response)
@@ -24,7 +24,7 @@ async function getData() {
  //});
 };
 //var queryUrl =
-//"http://127.0.0.1:5000/readFeature"
+//"http://127.0.0.1:5000/getGeojasonData"
 
 var queryUrl =
  "https://data.cityofchicago.org/resource/ijzp-q8t2.geojson"
@@ -44,11 +44,11 @@ var queryUrl =
   }
 // Perform a GET request to the query URL
 d3.json(queryUrl).then(function(data) {
-  console.log(data.features);
+  // 1console.log(data.features);
   console.log(data);
   // Using the features array sent back in the API data, create a GeoJSON layer and add it to the map
-  var geoLayer = L.geoJSON(data.features,
-  //var geoLayer = L.geoJSON(data,
+  // 2 var geoLayer = L.geoJSON(data.features,
+  var geoLayer = L.geoJSON(data,
     {
       onEachFeature: function(feature, layer) {
         layer.on({
@@ -132,34 +132,33 @@ d3.json(queryUrl).then(function(data) {
     collapsed: false
   }).addTo(myMap);
 
-   // Set up the legend
-   var legend = L.control({ position: "bottomright" });
-   legend.onAdd = function() {
-     var div = L.DomUtil.create("div", "info legend");
-     //fillColor:getColor(feature.properties.primary_type),
-     var colors = ['red','blue','green']
-     var crimes = ['THEFT','ROBBERY','Other Crime Types'];
-    var labels = [];
-     // Add min & max
-     var legendInfo = "<h1>Crime Type</h1>" 
-      // "<div class=\"labels\">" +
-       //  "<div class=\"min\">" + limits[0] + "</div>" +
-       //  "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-      // "</div>";
- 
-     div.innerHTML = legendInfo;
- 
-     colors.forEach(function(color, index) {
-       labels.push("<li style=\"background-color: " + colors[index] + "\">"+ crimes[index]+"</li>");
-     });
- 
-     div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-     return div;
-   };
- 
-   // Adding legend to the map
-   legend.addTo(myMap);
 });
 
 
-  
+  // Set up the legend
+  var legend = L.control({ position: "bottomright" });
+  legend.onAdd = function() {
+    var div = L.DomUtil.create("div", "info legend");
+    var limits = geojson.options.limits;
+    var colors = geojson.options.colors;
+    var labels = [];
+
+    // Add min & max
+    var legendInfo = "<h1>Crime Type</h1>" +
+      "<div class=\"labels\">" +
+        "<div class=\"min\">" + limits[0] + "</div>" +
+        "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+      "</div>";
+
+    div.innerHTML = legendInfo;
+
+    limits.forEach(function(limit, index) {
+      labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+    });
+
+    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+    return div;
+  };
+
+  // Adding legend to the map
+  //legend.addTo(myMap);

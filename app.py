@@ -1,6 +1,8 @@
 from flask import Flask, render_template, redirect ,jsonify
 from flask_pymongo import PyMongo
 import json
+import os
+import requests 
 
 app = Flask(__name__)
 
@@ -10,7 +12,8 @@ mongo = PyMongo(app)
 
 # Or set inline
 
-
+# default route
+# add route
 
 @app.route("/read")
 def read():
@@ -39,10 +42,32 @@ def readGeoJson():
             "geometry":  geojson_feature['geometry'],
             "properties" :  geojson_feature['properties']
             }
+
         )
     return jsonify(features)
 
+@app.route("/getGeojasonData")
+def readGeoJsonData():
+    #Comment 52 -- 63
+        cursor= mongo.db.events.find()
+    #print(cursor)
+   #     features =[]
+    #  features_values=[]
+    # for geojson_feature  in cursor:
+        #    features_values.append({
+      #      "type": geojson_feature['type'],
+            #"geometry":  geojson_feature['geometry'],
+       #     "properties" :  geojson_feature['properties']
+        #    }
+
+       # )
+        url ="https://data.cityofchicago.org/resource/ijzp-q8t2.geojson?$limit=50000&$offset=0&$order=id&$where=year > 2017"
+        crime_response = requests.get(url).json()
+        #features["features"] = features_values
+        #{features["features"] : ['features_values']}
+        #return jsonify(features_values)
+        return  jsonify(crime_response)
 
 ##crime = collection.find()
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="localhost" ,  port=5000, debug=True)

@@ -1,35 +1,8 @@
 
 
 // Store our API endpoint as queryUrl
-//getData();
-// retrieve data from database
-async function getData() {
-  //const response =  fetch('/readFeature');
- response =('http://127.0.0.1:5000/readFeature')
-  // data = response.json();
-    
-  console.log(response)
- //console.log(response.features);
-
-  //axios.get('http://127.0.0.1:5000/readFeature')
-  //const data = await response.json();
-  //const data = response.json();
- // console.log(data);
- //fetch('/readFeature')
- //.then(function (response) {
-   //  return response.json();
- //}).then(function (text) {
-   //  console.log('GET response:');
-   //  console.log(text.greeting); 
- //});
-};
-//var queryUrl =
-//"http://127.0.0.1:5000/readFeature"
-
 var queryUrl =
  "https://data.cityofchicago.org/resource/ijzp-q8t2.geojson"
-
- var geojson;
 
   function getColor(Crime_Type) {
       if (Crime_Type=='THEFT' ) {
@@ -45,33 +18,18 @@ var queryUrl =
 // Perform a GET request to the query URL
 d3.json(queryUrl).then(function(data) {
   console.log(data.features);
-  console.log(data);
   // Using the features array sent back in the API data, create a GeoJSON layer and add it to the map
   var geoLayer = L.geoJSON(data.features,
-  //var geoLayer = L.geoJSON(data,
     {
       onEachFeature: function(feature, layer) {
-        layer.on({
-          // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
-          mouseover: function(event) {
-            layer = event.target;
-            layer.setStyle({
-              fillOpacity: 0.9
-            });
-          },
-          mouseout: function(event) {
-            layer = event.target;
-            layer.setStyle({
-              fillOpacity: 0.5
-            });
-          },
-          
-        });
         layer.bindPopup(
           `<h2>District:${feature.properties.district}<br>Location:${feature.properties.block}<br>Crime_Type:${feature.properties.primary_type} <br>Year:${feature.properties.year
           }`
         );
-      
+        //layer.on({
+     //    mouseover: highlightFeature,
+      //    mouseout: resetHighlight,
+     //   click: zoomToFeature});
       },
       pointToLayer:function(feature,latlon){
           return L.circleMarker(latlon)
@@ -82,7 +40,6 @@ d3.json(queryUrl).then(function(data) {
               fillColor:getColor(feature.properties.primary_type),
               //radius:feature.properties.mag*4,
               weight:0.5,
-              fillOpacity: 0.5,
               color:"black"
           }
       }
@@ -132,34 +89,4 @@ d3.json(queryUrl).then(function(data) {
     collapsed: false
   }).addTo(myMap);
 
-   // Set up the legend
-   var legend = L.control({ position: "bottomright" });
-   legend.onAdd = function() {
-     var div = L.DomUtil.create("div", "info legend");
-     //fillColor:getColor(feature.properties.primary_type),
-     var colors = ['red','blue','green']
-     var crimes = ['THEFT','ROBBERY','Other Crime Types'];
-    var labels = [];
-     // Add min & max
-     var legendInfo = "<h1>Crime Type</h1>" 
-      // "<div class=\"labels\">" +
-       //  "<div class=\"min\">" + limits[0] + "</div>" +
-       //  "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-      // "</div>";
- 
-     div.innerHTML = legendInfo;
- 
-     colors.forEach(function(color, index) {
-       labels.push("<li style=\"background-color: " + colors[index] + "\">"+ crimes[index]+"</li>");
-     });
- 
-     div.innerHTML += "<ul>" + labels.join("") + "</ul>";
-     return div;
-   };
- 
-   // Adding legend to the map
-   legend.addTo(myMap);
 });
-
-
-  
