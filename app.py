@@ -31,10 +31,10 @@ def index():
            }
         )
     # print(features)
-    #data = { 'features' : features}
+    data = { 'features' : features}
     # print(data)
-    # data = json.dumps(data)
-    data = 'Hello'
+    data = json.dumps(data)
+    #data = 'Hello'
     return render_template('index.html', geojson=data)
 
 
@@ -54,14 +54,15 @@ def readGeoJson():
         )
     # print(features)
     
-    #data = { 'features' : features}
+    data = { 'features' : features}
     # print(data)
-    # data = json.dumps(data)
-    data = 'Hello'
-    #return render_template('index.html', geojson=data)
+    data = json.dumps(data)
+    #data = 'Hello'
+    return render_template('index.html', geojson=data)
+     #return render_template('index.html', geojson=data)
 
     # This line works
-    return jsonify(data)
+    #return jsonify(data)
 
 
 
