@@ -19,16 +19,23 @@
  //});
  //getData();
  // retrieve data from database
- async function getData() {
-     fetch('/getGeojasonData');
+// async function getData() {
+     //fetch('/http://127.0.0.1:5000/getGeojasonData')
+     //  .then(response) => {
+  //     response.json();
+
+ //    }
    //geojson=('http://127.0.0.1:5504/getGeojasonData')
    // data = response.json();
      
-   console.log(geojson3)
- }
+//console.log(geojson)
+ //}
+
   //console.log(response.features);
 //var queryUrl =
 //"http://127.0.0.1:5000/getGeojasonData"
+
+console.log(geojson)
 
  var queryUrl =  "https://data.cityofchicago.org/resource/ijzp-q8t2.geojson"
  
