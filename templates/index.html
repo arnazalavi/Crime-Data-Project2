@@ -17,7 +17,14 @@
 </head>
 
 <body>
-
+  <form id="form1" action="/selectorpage" method="POST" enctype="multipart/form-data">
+  <select id="mySelect" name="selector_listener">
+    <option value ="BATTERY">BATTERY</option>
+    <option value ="HOMICIDE">HOMICIDE</option>
+  </select>
+  <input type="submit" value="Submit">
+  </form>
+<!-- <a class="btn-primary btn-lg" href="/" role="button">CLICK ME!!</a> -->
   <!-- The div that holds our map -->
   <div id="map"></div>
 
@@ -33,11 +40,11 @@
   
   <!--script type="text/javascript" src="app.py">  -->
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <p>newwwww</p>
   
   <script>
    //var geojson = "{{geojson|safe}}"
-   var geojson = '{{geojson|safe}}'
+   var geojson = {{geojson|safe}}
+   console.log(geojson)
   </script>
   <script type="text/javascript" src="../static/js/maplogicDB.js"></script>
 </body>
